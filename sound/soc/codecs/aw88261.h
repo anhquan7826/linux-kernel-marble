@@ -517,7 +517,9 @@
 #define AW88261_VCAL_FACTOR		(1<<13)
 
 #define AW88261_START_RETRIES		(5)
-#define AW88261_START_WORK_DELAY_MS	(0)
+#define AW88261_START_WORK_DELAY_MS	(30)
+#define AW88261_START_WORK_RETRY_MS	(50)
+#define AW88261_START_WORK_MAX		(20)
 
 /* NOTE: 192000 has a reg value donwstream but not listed in datasheet */
 #define AW88261_RATES (SNDRV_PCM_RATE_8000_48000 | \
@@ -553,6 +555,7 @@
 
 enum aw88261_id {
 	AW88261_CHIP_ID = 0x2113,
+	AW88263S_CHIP_ID = 0x2032,
 };
 
 enum {
@@ -582,8 +585,12 @@ enum {
 };
 
 struct aw88261 {
+	bool keep_fw_i2s;
 	struct aw_device *aw_pa;
 	struct mutex lock;
+	struct delayed_work start_work;
+	bool playback_active;
+	unsigned int start_attempts;
 	struct gpio_desc *reset_gpio;
 	struct regmap *regmap;
 	struct aw_container *aw_cfg;
