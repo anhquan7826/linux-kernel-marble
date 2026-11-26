@@ -194,3 +194,7 @@ sphinx_*/
 
 # bc language scripts (not LLVM bitcode)
 !kernel/time/timeconst.bc
+
+# build.sh outputs
+/vmlinuz
+/sm8475-xiaomi-marble.dtb
